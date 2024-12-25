@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Nominees - Officer Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .nominees-wrapper {
+            background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%);
+            min-height: 100vh;
+            padding: 40px 0;
+        }
+        .nominee-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .nominee-card:hover {
+            transform: translateY(-5px);
+        }
+        .party-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .nominee-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="nominees-wrapper">
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded mb-4">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/officer/home">Officer Dashboard</a>
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link" href="/officer/add-nominatores">
+                        <i class="fas fa-plus-circle"></i> Add Nominee
+                    </a>
+                    <a class="nav-link" href="/logout">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Alert Messages -->
+        <div th:if="${session.failure!=null || session.success!=null}">
+            <div class="alert alert-danger" th:if="${session.failure}" th:text="${session.failure}"></div>
+            <div class="alert alert-success" th:if="${session.success}" th:text="${session.success}"></div>
+            <div th:text="${@sessionMessageRemover.removeMessage()}"></div>
+        </div>
+
+        <!-- Nominees Grid -->
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4" th:each="nominee : ${nominatores}">
+                <div class="nominee-card p-3">
+                    <div class="d-flex align-items-center mb-3">
+                        <img th:src="${nominee.imageLink}" 
+                             th:alt="${nominee.name}" 
+                             class="nominee-image me-3">
+                        <img th:src="${nominee.partlogoLink}" 
+                             th:alt="${nominee.name}" 
+                             class="party-logo">
+                    </div>
+                    
+                    <div class="nominee-info">
+                        <h5 class="mb-2" th:text="${nominee.name}"></h5>
+                        <p class="mb-1">
+                            <i class="fas fa-phone me-2"></i>
+                            <span th:text="${nominee.mobile}"></span>
+                        </p>
+                        <p class="mb-1">
+                            <i class="fas fa-envelope me-2"></i>
+                            <span th:text="${nominee.email}"></span>
+                        </p>
+                        <p class="mb-3">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            <span th:text="${nominee.address}"></span>
+                        </p>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a th:href="'/officer/edit-nominatores/'+${nominee.id}" 
+                           class="btn btn-primary flex-grow-1">
+                            <i class="fas fa-edit me-2"></i>Edit
+                        </a>
+                        <a th:href="'/officer/delete-nominatores/'+${nominee.id}" 
+                           class="btn btn-danger flex-grow-1"
+                           onclick="return confirm('Are you sure you want to delete this nominee?')">
+                            <i class="fas fa-trash-alt me-2"></i>Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+ <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+        img.onerror = function() {
+            this.src = '/default-image.png'; // Fallback image
+            console.error('Image failed to load:', this.getAttribute('src'));
+        };
+    });
+});
+ </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
+
+</body>
+</html>

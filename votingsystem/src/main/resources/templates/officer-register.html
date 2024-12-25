@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Officer Registration - Online Voting System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .officer-registration {
+            background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%);
+            min-height: 100vh;
+            padding: 50px 0;
+        }
+        .registration-form {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+        }
+        .form-control {
+            padding: 12px;
+            border-radius: 8px;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(26, 42, 108, 0.25);
+        }
+        .btn-submit {
+            background: #1a2a6c;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .btn-submit:hover {
+            background: #141e4d;
+            transform: translateY(-2px);
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="officer-registration">
+    <div class="container">
+        <!-- Alert Messages -->
+        <div class="row mb-4" th:if="${session.failure!=null || session.success!=null}">
+            <div class="col-lg-8 mx-auto">
+                <div class="alert alert-danger alert-dismissible fade show" th:if="${session.failure}" role="alert">
+                    <span th:text="${session.failure}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div class="alert alert-success alert-dismissible fade show" th:if="${session.success}" role="alert">
+                    <span th:text="${session.success}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div th:text="${@sessionMessageRemover.removeMessage()}"></div>
+            </div>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="registration-form">
+                    <h2 class="text-center mb-4">Officer Registration</h2>
+                    <form action="/officer/register" method="post" th:object="${officers}">
+                        <!-- Name Field -->
+                        <div class="mb-4">
+                            <label class="form-label">Full Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                <input type="text" class="form-control" name="name" th:value="*{name}" 
+                                       placeholder="Enter your full name">
+                            </div>
+                            <div class="error-message" th:errors="*{name}"></div>
+                        </div>
+
+                        <!-- Mobile Field -->
+                        <div class="mb-4">
+                            <label class="form-label">Mobile Number</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                <input type="tel" class="form-control" name="mobile" th:value="*{mobile}"
+                                       placeholder="Enter your mobile number">
+                            </div>
+                            <div class="error-message" th:errors="*{mobile}"></div>
+                        </div>
+
+                        <!-- Email Field -->
+                        <div class="mb-4">
+                            <label class="form-label">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                <input type="text" class="form-control" name="email" th:value="*{email}"
+                                       placeholder="Enter your email address">
+                            </div>
+                            <div class="error-message" th:errors="*{email}"></div>
+                        </div>
+
+                        <!-- Password Fields -->
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" class="form-control" name="password" th:value="*{password}"
+                                           placeholder="Enter password">
+                                </div>
+                                <div class="error-message" th:errors="*{password}"></div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label">Confirm Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" class="form-control" name="confirmpassword" 
+                                           th:value="*{confirmpassword}" placeholder="Confirm password">
+                                </div>
+                                <div class="error-message" th:errors="*{confirmpassword}"></div>
+                            </div>
+                        </div>
+
+                        <!-- Address Field -->
+                        <div class="mb-4">
+                            <label class="form-label">Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-home"></i></span>
+                                <textarea class="form-control" name="address" rows="3" 
+                                          th:text="*{address}" placeholder="Enter your full address"></textarea>
+                            </div>
+                            <div class="error-message" th:errors="*{address}"></div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-submit">
+                                <i class="fas fa-user-tie me-2"></i>Register as Officer
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Additional Links -->
+                    <div class="text-center mt-4">
+                        <p>Already registered? <a href="/login" class="text-primary">Login here</a></p>
+                        <p>Want to register as a Voter? <a href="/voters/register" class="text-primary">Click here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
+</body>
+</html>

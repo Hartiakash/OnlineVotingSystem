@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voter Registration</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        .registration-wrapper {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 80px 0;
+        }
+        .registration-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+        }
+        .form-control {
+            border-radius: 8px;
+            padding: 12px;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(46, 106, 177, 0.25);
+        }
+        .btn-register {
+            background: #2e6ab1;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .btn-register:hover {
+            background: #1e4c8a;
+            transform: translateY(-2px);
+        }
+        .input-group-text {
+            background: #f8f9fa;
+            border-radius: 8px 0 0 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="registration-wrapper">
+    <div class="container">
+        <!-- Alert Messages -->
+        <div class="row mb-4" th:if="${session.failure!=null || session.success!=null}">
+            <div class="col-md-8 mx-auto">
+                <div class="alert alert-danger alert-dismissible fade show" th:if="${session.failure}" role="alert">
+                    <span th:text="${session.failure}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div class="alert alert-success alert-dismissible fade show" th:if="${session.success}" role="alert">
+                    <span th:text="${session.success}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div th:text="${@sessionMessageRemover.removeMessage()}"></div>
+            </div>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="registration-card">
+                    <h2 class="text-center mb-4">Voter Registration</h2>
+                    <form action="/voters/register" method="post" th:object="${voters}" enctype="multipart/form-data">
+                        <!-- Name Field -->
+                        <div class="mb-4">
+                            <label class="form-label">Full Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                <input type="text" class="form-control" name="name" th:value="*{name}" 
+                                       placeholder="Enter your full name">
+                            </div>
+                            <small class="text-danger" th:errors="*{name}"></small>
+                        </div>
+
+                        <!-- Mobile Field -->
+                        <div class="mb-4">
+                            <label class="form-label">Mobile Number</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                <input type="tel" class="form-control" name="mobile" th:value="*{mobile}"
+                                       placeholder="Enter your mobile number">
+                            </div>
+                            <small class="text-danger" th:errors="*{mobile}"></small>
+                        </div>
+
+                        <!-- Email Field -->
+                        <div class="mb-4">
+                            <label class="form-label">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                <input type="text" class="form-control" name="email" th:value="*{email}"
+                                       placeholder="Enter your email address">
+                            </div>
+                            <small class="text-danger" th:errors="*{email}"></small>
+                        </div>
+
+                        <!-- Profile Image -->
+                        <div class="mb-4">
+                            <label class="form-label">Profile Photo</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-image"></i></span>
+                                <input type="file" class="form-control" name="image" required>
+                            </div>
+                        </div>
+
+                        <!-- Address Field -->
+                        <div class="mb-4">
+                            <label class="form-label">Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-home"></i></span>
+                                <textarea class="form-control" name="address" rows="3" 
+                                          th:text="*{address}" placeholder="Enter your full address"></textarea>
+                            </div>
+                            <small class="text-danger" th:errors="*{address}"></small>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-register">
+                                <i class="fas fa-user-plus me-2"></i>Register as Voter
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <p>Already registered? <a href="/login" class="text-primary">Login here</a></p>
+                        <p>Want to register as an Officer? <a href="/officer/register" class="text-primary">Click here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
+</body>
+</html>
